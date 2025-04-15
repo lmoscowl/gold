@@ -1,21 +1,25 @@
 
-from aiogram import Bot, Dispatcher, types
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
+from aiogram import Bot, Dispatcher, executor, types
 
-bot = Bot(token="ВАШ_ТОКЕН")
+API_TOKEN = 'ТВОЙ_ТОКЕН_ТУТ'
+
+bot = Bot(token=API_TOKEN)
 dp = Dispatcher(bot)
 
-keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
-keyboard.add(KeyboardButton("📍 Найти терминал"))
-keyboard.add(KeyboardButton("💰 Оценить золото"))
-
 @dp.message_handler(commands=['start'])
-async def start(message: types.Message):
-    await message.answer("Добро пожаловать! Выберите действие:", reply_markup=keyboard)
+async def cmd_start(message: types.Message):
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    buttons = ["📈 Курс золота", "🪙 Купить слиток"]
+    keyboard.add(*buttons)
+    await message.answer("👋 Добро пожаловать в GOLDEXROBOT!", reply_markup=keyboard)
+
+@dp.message_handler(lambda message: message.text == "📈 Курс золота")
+async def get_price(message: types.Message):
+    await message.answer("📊 Текущий курс золота: 7400₽/грамм")
+
+@dp.message_handler(lambda message: message.text == "🪙 Купить слиток")
+async def buy_gold(message: types.Message):
+    await message.answer("💰 Отлично! Свяжитесь с оператором для покупки.")
 
 if __name__ == '__main__':
-    from aiogram import executor
-    executor.start_polling(dp)
-
-if __name__ == "__main__":
-    asyncio.run(main())
+    executor.start_polling(dp, skip_updates=True)
