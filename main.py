@@ -17,7 +17,7 @@ async def cmd_start(message: types.Message):
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     buttons = ["📍 Найти терминал", "💰 Оценить золото", "🛒 Купить слиток", "📤 Продать золото", "👤 Мои заявки"]
     keyboard.add(*[types.KeyboardButton(text=b) for b in buttons])
-    await message.answer("👋 Добро пожаловать в GOLDEXROBOT!
+    await message.answer("👋 Добро пожаловать в GOLDEXROBOT!")
 Выберите действие:", reply_markup=keyboard)
 
 async def main():
