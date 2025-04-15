@@ -1,27 +1,21 @@
 
 from aiogram import Bot, Dispatcher, types
-from aiogram.filters import Command
-import asyncio, os
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
-TOKEN = os.getenv("TOKEN")
-ADMIN_CHAT_ID = os.getenv("ADMIN_CHAT_ID")
+bot = Bot(token="ВАШ_ТОКЕН")
+dp = Dispatcher(bot)
 
-if not TOKEN:
-    raise ValueError("TOKEN переменная окружения не установлена")
+keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
+keyboard.add(KeyboardButton("📍 Найти терминал"))
+keyboard.add(KeyboardButton("💰 Оценить золото"))
 
-bot = Bot(token=TOKEN)
-dp = Dispatcher()
+@dp.message_handler(commands=['start'])
+async def start(message: types.Message):
+    await message.answer("Добро пожаловать! Выберите действие:", reply_markup=keyboard)
 
-@dp.message(Command("start"))
-async def cmd_start(message: types.Message):
-    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    buttons = ["📍 Найти терминал", "💰 Оценить золото", "🛒 Купить слиток", "📤 Продать золото", "👤 Мои заявки"]
-    keyboard.add(*[types.KeyboardButton(text=b) for b in buttons])
-    await message.answer("👋 Добро пожаловать в GOLDEXROBOT!")
-Выберите действие:", reply_markup=keyboard)
-
-async def main():
-    await dp.start_polling(bot)
+if __name__ == '__main__':
+    from aiogram import executor
+    executor.start_polling(dp)
 
 if __name__ == "__main__":
     asyncio.run(main())
